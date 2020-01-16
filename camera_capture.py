@@ -12,7 +12,7 @@ def camera_capture():
 
         frame_flip = cv2.flip(frame, 1)
         #frame表示
-        cv2.namedWindow("window", cv2.WINDOW_NORMAL)
+        cv2.namedWindow("", cv2.WINDOW_NORMAL)
         cv2.imshow("", frame_flip)
 
         #key入力で終了

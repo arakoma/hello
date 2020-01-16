@@ -11,7 +11,7 @@ https://github.com/opencv/opencv/tree/master/data/haarcascades
 
 ## pythonモジュール
 ```python
-pip install pygame opencv-python 
+pip install pygame opencv-python numpy
 ```
 
 ## todo
