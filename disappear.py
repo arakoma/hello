@@ -29,22 +29,15 @@ def mean_pooling(img, s=1, d=0):
     return out
 
 
-img = cv2.imread("waifu.png")
+img = cv2.imread("image.png")
 img2 = img.copy()
 H, W, C = img.shape
-x = max(H, W)
+x = min(H, W)
 
 for s in range(1, x//30)[::-1]:
-    img2 = mean_pooling(img2, s, d=3)
+    img2 = mean_pooling(img2, s, d=-5)
     cv2.imshow("", img2)
-    cv2.waitKey(0)
-
-for s in range(1,x//30):
-    img2 = mean_pooling(img, s, d=3)
-    cv2.imshow("", img2)
-    cv2.waitKey(500)
-else:
-    cv2.imshow("", img)
+    cv2.waitKey(100)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
