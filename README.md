@@ -21,7 +21,6 @@ pip install pygame opencv-python numpy
 - main.py が悪魔合体って感じなので整理する
 - camera の映像は完成品は流さない(?)
 
-- 画像表示から待機画面戻るときのエフェクト作る
 - sound.py mp3ファイルにも対応させる
 
 - 音源流す条件増やす

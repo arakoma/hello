@@ -1,5 +1,32 @@
+"""
+自作関数
+
+- play_sound(filename, type)
+- mosaic(img, s=1, d=0)
+
+"""
+
+
+import pygame
+import wave
+import time
 import cv2
 import numpy as np
+
+
+def play_sound(filename, type):
+
+    if type == "wav":
+        with wave.open(filename, "rb") as wav:
+            frate = wav.getframerate()
+            fnum = wav.getnframes()
+            sound_time = fnum / frate
+    
+    pygame.mixer.init()
+    pygame.mixer.music.load(filename)
+    pygame.mixer.music.play()
+    time.sleep(sound_time)
+    pygame.mixer.music.stop()
 
 
 # s*s個に分割する
@@ -39,28 +66,3 @@ def mosaic(img, s=1, d=0):
     out = out.astype(np.uint8)
 
     return out
-
-
-img = cv2.imread("image.png")
-img2 = img.copy()
-H, W, C = img.shape
-x = min(H, W)
-
-# disappear
-for s in range(1, 30)[::-1]:
-    img2 = mosaic(img2, s)
-    cv2.namedWindow("", cv2.WINDOW_NORMAL)
-    cv2.imshow("", img2)
-    cv2.waitKey(100)
-
-# appear
-for s in range(1, 30):
-    img2 = mosaic(img, s)
-    cv2.namedWindow("", cv2.WINDOW_NORMAL)
-    cv2.imshow("", img2)
-    cv2.waitKey(100)
-else:
-    cv2.imshow("", img)
-
-cv2.waitKey(0)
-cv2.destroyAllWindows()

@@ -5,21 +5,7 @@ import time
 import cv2
 import numpy as np
 
-
-#音源ファイル再生
-def play_sound(filename, type):
-
-    if type == "wav":
-        with wave.open(filename, "rb") as wav:
-            frate = wav.getframerate()
-            fnum = wav.getnframes()
-            sound_time = fnum / frate
-    
-    pygame.mixer.init()
-    pygame.mixer.music.load(filename)
-    pygame.mixer.music.play()
-    time.sleep(sound_time)
-    pygame.mixer.music.stop()
+import my_func
 
 
 def main():
@@ -31,10 +17,18 @@ def main():
         return
 
     #表示画像
-    img = cv2.imread("waifu.png")
+    img_in = cv2.imread("image.png")
+    img_out = my_func.mosaic(img_in, s=1)
 
     #音声flag
     flag_hello = True
+
+    # 顔検出フラグ
+    flag_inout = False
+    
+    # 時間測る
+    start_in = time.time()
+    start_out = time.time()
 
     while True:
 
@@ -48,11 +42,58 @@ def main():
 #        for (x,y,w,h) in faces:
 #            frame = cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
         
-        #顔検出したら音源再生
-        if len(faces):
+        t_lim = 3
+        now = time.time()
+        t_in = now - start_in
+        t_out = now - start_out
+
+        #顔検出2秒以上連続同じ場合
+        if len(faces) and t_in >= t_lim:
             if flag_hello:
-                play_sound(r"sounds/ohhayoo_01.wav", "wav")
+                my_func.play_sound(r"sounds/ohhayoo_01.wav", "wav")
                 flag_hello = False
+            
+            if flag_inout:
+                cv2.namedWindow("", cv2.WINDOW_NORMAL)
+                cv2.imshow("", img_in)
+            else:
+                # appear
+                for s in range(1, 30):
+                    img2 = my_func.mosaic(img_in, s)
+                    cv2.namedWindow("", cv2.WINDOW_NORMAL)
+                    cv2.imshow("", img2)
+                    cv2.waitKey(50)
+                
+                cv2.namedWindow("", cv2.WINDOW_NORMAL)
+                cv2.imshow("", img_in)
+                flag_inout = True
+                start_in = now - t_lim
+            start_out = time.time()
+        
+        elif not len(faces) and t_out >= t_lim:
+            if not flag_inout:
+                cv2.namedWindow("", cv2.WINDOW_NORMAL)
+                cv2.imshow("", img_out)
+            else:
+                # disappear
+                for s in range(1, 30)[::-1]:
+                    img2 = my_func.mosaic(img_in, s)
+                    cv2.namedWindow("", cv2.WINDOW_NORMAL)
+                    cv2.imshow("", img2)
+                    cv2.waitKey(50)
+                
+                flag_inout = False
+                start_out = now - t_lim
+            start_in = time.time()
+        
+        # 2秒以上連続でない場合
+        else:
+            if flag_inout:
+                cv2.namedWindow("", cv2.WINDOW_NORMAL)
+                cv2.imshow("", img_in)
+            else:
+                cv2.namedWindow("", cv2.WINDOW_NORMAL)
+                cv2.imshow("", img_out)
 
         #frame表示
 #        cv2.namedWindow("", cv2.WINDOW_NORMAL)
@@ -72,4 +113,5 @@ def main():
     cv2.destroyAllWindows()
 
 
-main()
+if __name__ == "__main__":
+    main()
