@@ -49,10 +49,6 @@ def main():
 
         #顔検出2秒以上連続同じ場合
         if len(faces) and t_in >= t_lim:
-            if flag_hello:
-                my_func.play_sound(r"sounds/ohhayoo_01.wav", "wav")
-                flag_hello = False
-            
             if flag_inout:
                 cv2.namedWindow("", cv2.WINDOW_NORMAL)
                 cv2.imshow("", img_in)
@@ -63,11 +59,16 @@ def main():
                     cv2.namedWindow("", cv2.WINDOW_NORMAL)
                     cv2.imshow("", img2)
                     cv2.waitKey(50)
-                
+
                 cv2.namedWindow("", cv2.WINDOW_NORMAL)
                 cv2.imshow("", img_in)
                 flag_inout = True
                 start_in = now - t_lim
+                
+                if flag_hello:
+                    my_func.play_sound(r"sounds/ohhayoo_01.wav", "wav")
+                    flag_hello = False
+
             start_out = time.time()
         
         elif not len(faces) and t_out >= t_lim:
