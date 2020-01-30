@@ -18,10 +18,11 @@ def main():
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         return
+    f = "adjust camera ! if ok, push s key"
     while True:
         ret, frame = cap.read()
-        cv2.namedWindow("", cv2.WINDOW_NORMAL)
-        cv2.imshow("", frame)
+        cv2.namedWindow(f, cv2.WINDOW_NORMAL)
+        cv2.imshow(f, frame)
         #key入力
         key = cv2.waitKey(1) & 0xFF
         if key:
@@ -49,6 +50,7 @@ def main():
     if not cap.isOpened():
         return
 
+    f = "q:quit, r:reset,"
     while True:
 
         ret, frame = cap.read()
@@ -66,24 +68,25 @@ def main():
         t_in = now - start_in
         t_out = now - start_out
 
-        #顔検出2秒以上連続同じ場合
+        #顔検出t_lim秒以上連続同じ場合
         if len(faces) and t_in >= t_lim:
             if flag_inout:
-                cv2.namedWindow("", cv2.WINDOW_NORMAL)
-                cv2.imshow("", img_in)
+                cv2.namedWindow(f, cv2.WINDOW_NORMAL)
+                cv2.imshow(f, img_in)
             else:
                 # appear
                 for s in range(1, 30):
                     img2 = my_func.mosaic(img_in, s)
-                    cv2.namedWindow("", cv2.WINDOW_NORMAL)
-                    cv2.imshow("", img2)
+                    cv2.namedWindow(f, cv2.WINDOW_NORMAL)
+                    cv2.imshow(f, img2)
                     cv2.waitKey(50)
 
-                cv2.namedWindow("", cv2.WINDOW_NORMAL)
-                cv2.imshow("", img_in)
+                cv2.namedWindow(f, cv2.WINDOW_NORMAL)
+                cv2.imshow(f, img_in)
                 flag_inout = True
                 start_in = now - t_lim
                 
+                # flag で音声出力
                 if flag_hello:
                     my_func.play_sound(r"sounds/ohhayoo_01.wav", "wav")
                     flag_hello = False
@@ -92,28 +95,28 @@ def main():
         
         elif not len(faces) and t_out >= t_lim:
             if not flag_inout:
-                cv2.namedWindow("", cv2.WINDOW_NORMAL)
-                cv2.imshow("", img_out)
+                cv2.namedWindow(f, cv2.WINDOW_NORMAL)
+                cv2.imshow(f, img_out)
             else:
                 # disappear
                 for s in range(1, 30)[::-1]:
                     img2 = my_func.mosaic(img_in, s)
-                    cv2.namedWindow("", cv2.WINDOW_NORMAL)
-                    cv2.imshow("", img2)
+                    cv2.namedWindow(f, cv2.WINDOW_NORMAL)
+                    cv2.imshow(f, img2)
                     cv2.waitKey(50)
                 
                 flag_inout = False
                 start_out = now - t_lim
             start_in = time.time()
         
-        # 2秒以上連続でない場合
+        # t_lim秒以上連続でない場合
         else:
             if flag_inout:
-                cv2.namedWindow("", cv2.WINDOW_NORMAL)
-                cv2.imshow("", img_in)
+                cv2.namedWindow(f, cv2.WINDOW_NORMAL)
+                cv2.imshow(f, img_in)
             else:
-                cv2.namedWindow("", cv2.WINDOW_NORMAL)
-                cv2.imshow("", img_out)
+                cv2.namedWindow(f, cv2.WINDOW_NORMAL)
+                cv2.imshow(f, img_out)
 
         #frame表示
 #        cv2.namedWindow("", cv2.WINDOW_NORMAL)
