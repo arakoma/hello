@@ -1,17 +1,52 @@
 from tkinter import *
 from tkinter import ttk
+import os
 
 
-root = Tk()
-root.title("hello !")
-root.geometry("256x256")
+# file存在確認
+def is_exist(path, frame, r, name):
+    path = str(path.get())
+    rpath = str(repr(path)[1:-1])#raw文字列化
+    if os.path.exists(rpath):
+        ok = ttk.Label(frame, width=50, text="{} ok !".format(name))
+        ok.grid(row=r)
+    else:
+        no = ttk.Label(frame, width=50, \
+                        text="no {}... please check the path".format(name))
+        no.grid(row=r)
+    print(path)
 
-label = Label(root, text="hello !")
-label.grid()
 
-def pushed():
-    print("pushed !")
-button = Button(root, text="button", command=pushed)
-button.grid()
+def configuration():
+    root = Tk()
+    root.title("hello !")
 
-root.mainloop()
+    # メインフレーム(この中に諸々入れる)
+    mainframe = ttk.Frame(root, padding=10)
+    mainframe.grid()
+
+    # 画像path入力
+    label = ttk.Label(mainframe, text="image path :")
+    label.grid(row=0)
+
+    img_path = StringVar()
+    entry_img_path = ttk.Entry(mainframe, width=50, textvariable=img_path)
+    entry_img_path.grid(row=1)
+
+    button_img_path = ttk.Button(mainframe, text="enter", \
+                                command=lambda:is_exist(img_path, mainframe, 3, "image"))
+    button_img_path.grid(row=2)
+
+    # 終了
+    button_fin = ttk.Button(mainframe, text="all ok", \
+                                command=lambda:root.destroy())
+    button_fin.grid(row=5)
+
+
+    root.mainloop()
+
+    img_path = str(img_path.get())
+
+    return img_path
+
+print(configuration() + "ooo")
