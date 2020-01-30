@@ -9,15 +9,30 @@ import my_func
 
 
 def main():
+    # 設定画面
+    img_path = my_func.configuration()
+
     face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
-
+    
+    # カメラ調整の時間
     cap = cv2.VideoCapture(0)
-
     if not cap.isOpened():
         return
+    while True:
+        ret, frame = cap.read()
+        cv2.namedWindow("", cv2.WINDOW_NORMAL)
+        cv2.imshow("", frame)
+        #key入力
+        key = cv2.waitKey(1) & 0xFF
+        if key:
+            #終了
+            if key == ord('s'):
+                break
+    cap.release()
+    cv2.destroyAllWindows()
 
     #表示画像
-    img_in = cv2.imread("image.png")
+    img_in = cv2.imread(img_path)
     img_out = my_func.mosaic(img_in, s=1)
 
     #音声flag
@@ -29,6 +44,10 @@ def main():
     # 時間測る
     start_in = time.time()
     start_out = time.time()
+
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        return
 
     while True:
 

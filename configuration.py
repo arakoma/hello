@@ -46,7 +46,6 @@ def configuration():
     root.mainloop()
 
     img_path = str(img_path.get())
+    r_img_path = str(repr(img_path)[1:-1])#raw文字列化
 
-    return img_path
-
-print(configuration() + "ooo")
+    return r_img_path
