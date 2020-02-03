@@ -28,23 +28,23 @@ https://github.com/opencv/opencv/tree/master/data/haarcascades
 pip install pygame opencv-python numpy
 ```
 
-## todo
+## memo
 - main.py を整理する
 
 - sound.py mp3ファイルにも対応させる
 - 画像指定無い場合のデフォルト画面作る
-
-- 音源流す条件増やす
-- 条件に合わせた音源を探す
-
 - opencv haar-cascade検出器の原理読む  
 https://algorithm.joho.info/machine-learning/haar-like-cascades-face-detection/  
 
-## memo
 - 画像指定しないと設定画面終えられないようにする  
-- 時間経過で"おつかれ！休憩しない？"を言ってほしい  
- - 設定画面で、n時間後に言うを設定(タイマーみたいな感じ)  
- - 音源探す  
 - 設定で音声フラグ管理  
 - 設定で入力しない場合の処理  
 
+# 音声条件
+- "おはよー"　起動時最初
+  
+#### 未実装
+- "おつかれ"　時間経過  
+- "n時間たちました"　時間経過  
+- "n時です"　0,6,12,18,時にコール  
+- "今日はm月d日x曜日です"　その日の初回起動時  
