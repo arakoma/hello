@@ -1,3 +1,7 @@
 .vscode/
 image.png
 venv37
+main.spec
+build/
+my_func.pyo
+__pycache__

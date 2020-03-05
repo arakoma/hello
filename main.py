@@ -4,15 +4,25 @@ import wave
 import time
 import cv2
 import numpy as np
+import os
+import sys
 
 import my_func
 
 
+# .specのdatasの展開先pathの取得、_MEIPASSは.exeの起動時にpyinstallerが一時的に作るフォルダ
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
+
+
 def main():
+
     # 設定画面
     img_path = my_func.configuration()
 
-    face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
+    face_cascade = cv2.CascadeClassifier(resource_path('haarcascade_frontalface_default.xml'))
     
     # カメラ調整の時間
     cap = cv2.VideoCapture(0)
@@ -86,7 +96,7 @@ def main():
                 
                 # flag で音声出力
                 if flag_hello:
-                    my_func.play_sound(r"sounds/ohhayoo_01.wav", "wav")
+                    my_func.play_sound(resource_path("ohhayoo_01.wav"), "wav")
                     flag_hello = False
 
             start_out = time.time()
