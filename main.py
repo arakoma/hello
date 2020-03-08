@@ -17,14 +17,8 @@ def resource_path(relative_path):
     return os.path.join(os.path.abspath("."), relative_path)
 
 
-def main():
-
-    # 設定画面
-    img_path = my_func.configuration()
-
-    face_cascade = cv2.CascadeClassifier(resource_path('haarcascade_frontalface_default.xml'))
-    
-    # カメラ調整の時間
+def adjust_camera():
+        # カメラ調整の時間
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         return
@@ -41,6 +35,17 @@ def main():
                 break
     cap.release()
     cv2.destroyAllWindows()
+
+
+
+def main():
+    face_cascade = cv2.CascadeClassifier(resource_path('haarcascade_frontalface_default.xml'))
+
+    # 設定画面
+    img_path = my_func.configuration()
+
+    # カメラ位置調整
+    adjust_camera()
 
     #表示画像
     img_in = cv2.imread(img_path)
@@ -139,6 +144,9 @@ def main():
             #flagリセット
             elif key == ord('r'):
                 flag_hello = True
+            #カメラ位置調整
+            elif key == ord('s'):
+                adjust_camera()
 
     cap.release()
     cv2.destroyAllWindows()
