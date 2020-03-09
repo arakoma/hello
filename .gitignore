@@ -5,3 +5,5 @@ main.spec
 build/
 my_func.pyo
 __pycache__
+sounds/
+haarcascades/
