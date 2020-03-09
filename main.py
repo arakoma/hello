@@ -25,6 +25,7 @@ def adjust_camera():
     f = "adjust camera ! if ok, push s key"
     while True:
         ret, frame = cap.read()
+        frame = cv2.flip(frame, 1)
         cv2.namedWindow(f, cv2.WINDOW_NORMAL)
         cv2.imshow(f, frame)
         #key入力
