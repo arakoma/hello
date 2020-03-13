@@ -34,7 +34,7 @@ def main():
     flag_hello = True
 
     # 顔検出フラグ
-    flag_inout = False
+    flag_sitting = False
     
     # 時間測る
     start_in = time.time()
@@ -60,36 +60,32 @@ def main():
         t_in = now - start_in
         t_out = now - start_out
 
-        #顔検出t_lim秒以上連続同じ場合
+        #顔検出ありt_lim秒以上連続の時
         if len(faces) and t_in >= t_lim:
-            if flag_inout:
-                cv2.namedWindow(f, cv2.WINDOW_NORMAL)
-                cv2.imshow(f, img_in)
-            else:
+            if not flag_sitting:
                 # appear
                 for s in range(1, 30):
                     img2 = my_func.mosaic(img_in, s)
                     cv2.namedWindow(f, cv2.WINDOW_NORMAL)
                     cv2.imshow(f, img2)
                     cv2.waitKey(50)
-
-                cv2.namedWindow(f, cv2.WINDOW_NORMAL)
-                cv2.imshow(f, img_in)
-                flag_inout = True
+                flag_sitting = True
                 start_in = now - t_lim
-                
-                # flag で音声出力
-                if flag_hello:
-                    my_func.play_sound(resource_path("ohhayoo_01.wav"), "wav")
-                    flag_hello = False
+            
+            cv2.namedWindow(f, cv2.WINDOW_NORMAL)
+            cv2.imshow(f, img_in)
+
+            # flag で音声出力
+            if flag_hello:
+                time.sleep(10)
+                my_func.play_sound(resource_path("ohhayoo_01.wav"), "wav")
+                flag_hello = False
 
             start_out = time.time()
         
+        #顔検出なしt_lim秒以上連続の時
         elif not len(faces) and t_out >= t_lim:
-            if not flag_inout:
-                cv2.namedWindow(f, cv2.WINDOW_NORMAL)
-                cv2.imshow(f, img_out)
-            else:
+            if flag_sitting:
                 # disappear
                 for s in range(1, 30)[::-1]:
                     img2 = my_func.mosaic(img_in, s)
@@ -99,20 +95,20 @@ def main():
                 
                 flag_inout = False
                 start_out = now - t_lim
+            
+            cv2.namedWindow(f, cv2.WINDOW_NORMAL)
+            cv2.imshow(f, img_out)
+
             start_in = time.time()
         
-        # t_lim秒以上連続でない場合
+        # t_lim秒以上連続で同じじゃない場合
         else:
-            if flag_inout:
+            if flag_sitting:
                 cv2.namedWindow(f, cv2.WINDOW_NORMAL)
                 cv2.imshow(f, img_in)
             else:
                 cv2.namedWindow(f, cv2.WINDOW_NORMAL)
                 cv2.imshow(f, img_out)
-
-        #frame表示
-#        cv2.namedWindow("", cv2.WINDOW_NORMAL)
-#        cv2.imshow("", frame)
 
         #key入力
         key = cv2.waitKey(1) & 0xFF
