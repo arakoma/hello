@@ -20,110 +20,116 @@ def resource_path(relative_path):
 def main():
     face_cascade = cv2.CascadeClassifier(resource_path('haarcascade_frontalface_default.xml'))
 
-    # 設定画面
-    img_path = my_func.configuration()
-
-    # カメラ位置調整
-    my_func.adjust_camera()
-
-    #表示画像
-    img_in = cv2.imread(img_path)
-    img_out = my_func.mosaic(img_in, s=1)
-
-    #音声flag
-    flag_hello = True
-
-    # 顔検出フラグ
-    flag_sitting = False
-    
-    # 時間測る
-    start_in = time.time()
-    start_out = time.time()
-
-    cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
-        return
-
-    f = "q:quit, r:reset,"
     while True:
+        # 設定画面
+        img_path = my_func.configuration()
 
-        ret, frame = cap.read()
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        # カメラ位置調整
+        my_func.adjust_camera()
 
-        #顔検出
-        faces = face_cascade.detectMultiScale(gray, minSize=(200, 200))
-#        for (x,y,w,h) in faces:
-#            frame = cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
+        #表示画像
+        img_in = cv2.imread(img_path)
+        img_out = my_func.mosaic(img_in, s=1)
+
+        #音声flag
+        flag_hello = True
+
+        # 顔検出フラグ
+        flag_sitting = False
         
-        t_lim = 3
-        now = time.time()
-        t_in = now - start_in
-        t_out = now - start_out
+        # 着席開始時間, 離席開始時間
+        start_in = time.time()
+        start_out = time.time()
 
-        #顔検出ありt_lim秒以上連続の時
-        if len(faces) and t_in >= t_lim:
-            if not flag_sitting:
-                # appear
-                for s in range(1, 30):
-                    img2 = my_func.mosaic(img_in, s)
-                    cv2.namedWindow(f, cv2.WINDOW_NORMAL)
-                    cv2.imshow(f, img2)
-                    cv2.waitKey(50)
-                flag_sitting = True
-                start_in = now - t_lim
+        cap = cv2.VideoCapture(0)
+        if not cap.isOpened():
+            return
+
+        f = "q:quit, r:reset,"
+
+
+        while True:
+
+            ret, frame = cap.read()
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+            #顔検出
+            faces = face_cascade.detectMultiScale(gray, minSize=(200, 200))
+    #        for (x,y,w,h) in faces:
+    #            frame = cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
             
-            cv2.namedWindow(f, cv2.WINDOW_NORMAL)
-            cv2.imshow(f, img_in)
+            t_lim = 3
+            now = time.time()
+            t_in = now - start_in
+            t_out = now - start_out
 
-            # flag で音声出力
-            if flag_hello:
-                time.sleep(10)
-                my_func.play_sound(resource_path("ohhayoo_01.wav"), "wav")
-                flag_hello = False
-
-            start_out = time.time()
-        
-        #顔検出なしt_lim秒以上連続の時
-        elif not len(faces) and t_out >= t_lim:
-            if flag_sitting:
-                # disappear
-                for s in range(1, 30)[::-1]:
-                    img2 = my_func.mosaic(img_in, s)
-                    cv2.namedWindow(f, cv2.WINDOW_NORMAL)
-                    cv2.imshow(f, img2)
-                    cv2.waitKey(50)
-                flag_sitting = False
-                start_out = now - t_lim
-            
-            cv2.namedWindow(f, cv2.WINDOW_NORMAL)
-            cv2.imshow(f, img_out)
-
-            start_in = time.time()
-        
-        # t_lim秒以上連続で同じじゃない場合
-        else:
-            if flag_sitting:
+            #顔検出ありt_lim秒以上連続の時
+            if len(faces) and t_in >= t_lim:
+                if not flag_sitting:
+                    # appear
+                    for s in range(1, 30):
+                        img2 = my_func.mosaic(img_in, s)
+                        cv2.namedWindow(f, cv2.WINDOW_NORMAL)
+                        cv2.imshow(f, img2)
+                        cv2.waitKey(50)
+                    flag_sitting = True
+                    start_in = now - t_lim
+                
                 cv2.namedWindow(f, cv2.WINDOW_NORMAL)
                 cv2.imshow(f, img_in)
-            else:
+
+                # flag で音声出力
+                if flag_hello:
+                    time.sleep(10)
+                    my_func.play_sound(resource_path("ohhayoo_01.wav"), "wav")
+                    flag_hello = False
+
+                start_out = time.time()
+            
+            #顔検出なしt_lim秒以上連続の時
+            elif not len(faces) and t_out >= t_lim:
+                if flag_sitting:
+                    # disappear
+                    for s in range(1, 30)[::-1]:
+                        img2 = my_func.mosaic(img_in, s)
+                        cv2.namedWindow(f, cv2.WINDOW_NORMAL)
+                        cv2.imshow(f, img2)
+                        cv2.waitKey(50)
+                    flag_sitting = False
+                    start_out = now - t_lim
+                
                 cv2.namedWindow(f, cv2.WINDOW_NORMAL)
                 cv2.imshow(f, img_out)
 
-        #key入力
-        key = cv2.waitKey(1) & 0xFF
-        if key:
-            #終了
-            if key == ord('q'):
-                break
-            #flagリセット
-            elif key == ord('r'):
-                flag_hello = True
-            #カメラ位置調整
-            elif key == ord('s'):
-                adjust_camera()
+                start_in = time.time()
+            
+            # t_lim秒以上連続で同じじゃない場合
+            else:
+                if flag_sitting:
+                    cv2.namedWindow(f, cv2.WINDOW_NORMAL)
+                    cv2.imshow(f, img_in)
+                else:
+                    cv2.namedWindow(f, cv2.WINDOW_NORMAL)
+                    cv2.imshow(f, img_out)
 
-    cap.release()
-    cv2.destroyAllWindows()
+            #key入力
+            key = cv2.waitKey(1) & 0xFF
+            if key:
+                #終了
+                if key == ord('q'):
+                    sys.exit()
+                #flagリセット
+                elif key == ord('r'):
+                    flag_hello = True
+                #カメラ位置調整
+                elif key == ord('s'):
+                    my_func.adjust_camera()
+                #設定画面に戻る
+                elif key == ord('c'):
+                    break
+
+        cap.release()
+        cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":
