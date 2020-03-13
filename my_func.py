@@ -2,6 +2,7 @@
 自作関数
 
 - configuration()
+- adjust_camera()
 - play_sound(filename, type)
 - mosaic(img, s=1, d=0)
 
@@ -63,6 +64,27 @@ def configuration():
     r_img_path = str(repr(img_path)[1:-1])#raw文字列化
 
     return r_img_path
+
+
+# カメラ調整の時間
+def adjust_camera():
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        return
+    f = "adjust camera ! if ok, push s key"
+    while True:
+        ret, frame = cap.read()
+        frame = cv2.flip(frame, 1)
+        cv2.namedWindow(f, cv2.WINDOW_NORMAL)
+        cv2.imshow(f, frame)
+        #key入力
+        key = cv2.waitKey(1) & 0xFF
+        if key:
+            #終了
+            if key == ord('s'):
+                break
+    cap.release()
+    cv2.destroyAllWindows()
 
 
 def play_sound(filename, type):

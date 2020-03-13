@@ -17,28 +17,6 @@ def resource_path(relative_path):
     return os.path.join(os.path.abspath("."), relative_path)
 
 
-def adjust_camera():
-        # カメラ調整の時間
-    cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
-        return
-    f = "adjust camera ! if ok, push s key"
-    while True:
-        ret, frame = cap.read()
-        frame = cv2.flip(frame, 1)
-        cv2.namedWindow(f, cv2.WINDOW_NORMAL)
-        cv2.imshow(f, frame)
-        #key入力
-        key = cv2.waitKey(1) & 0xFF
-        if key:
-            #終了
-            if key == ord('s'):
-                break
-    cap.release()
-    cv2.destroyAllWindows()
-
-
-
 def main():
     face_cascade = cv2.CascadeClassifier(resource_path('haarcascade_frontalface_default.xml'))
 
@@ -46,7 +24,7 @@ def main():
     img_path = my_func.configuration()
 
     # カメラ位置調整
-    adjust_camera()
+    my_func.adjust_camera()
 
     #表示画像
     img_in = cv2.imread(img_path)
