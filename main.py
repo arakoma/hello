@@ -19,6 +19,7 @@ def resource_path(relative_path):
 
 def main():
     face_cascade = cv2.CascadeClassifier(resource_path('haarcascade_frontalface_default.xml'))
+#    face_cascade = cv2.CascadeClassifier('./haarcascades/haarcascade_frontalface_default.xml')
 
     while True:
         # 設定画面
@@ -45,7 +46,7 @@ def main():
         if not cap.isOpened():
             return
 
-        f = "q:quit, r:reset,"
+        f = "q:quit, r:reset, c:configuration"
 
 
         while True:
@@ -80,8 +81,9 @@ def main():
 
                 # flag で音声出力
                 if flag_hello:
-                    time.sleep(10)
                     my_func.play_sound(resource_path("ohhayoo_01.wav"), "wav")
+#                    my_func.play_sound("./sounds/ohhayoo_01.wav", "wav")
+
                     flag_hello = False
 
                 start_out = time.time()
@@ -121,9 +123,6 @@ def main():
                 #flagリセット
                 elif key == ord('r'):
                     flag_hello = True
-                #カメラ位置調整
-                elif key == ord('s'):
-                    my_func.adjust_camera()
                 #設定画面に戻る
                 elif key == ord('c'):
                     break
