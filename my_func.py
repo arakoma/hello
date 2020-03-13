@@ -67,7 +67,7 @@ def configuration():
 
 
 # カメラ調整の時間
-def adjust_camera():
+def adjust_camera(face_cascade):
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         return
@@ -75,6 +75,12 @@ def adjust_camera():
     while True:
         ret, frame = cap.read()
         frame = cv2.flip(frame, 1)
+        #顔検出
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, minSize=(200, 200))
+        for (x,y,w,h) in faces:
+            frame = cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
+        #画面表示
         cv2.namedWindow(f, cv2.WINDOW_NORMAL)
         cv2.imshow(f, frame)
         #key入力

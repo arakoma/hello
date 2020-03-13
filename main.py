@@ -26,7 +26,7 @@ def main():
         img_path = my_func.configuration()
 
         # カメラ位置調整
-        my_func.adjust_camera()
+        my_func.adjust_camera(face_cascade)
 
         #表示画像
         img_in = cv2.imread(img_path)
