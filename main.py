@@ -92,8 +92,7 @@ def main():
                     cv2.namedWindow(f, cv2.WINDOW_NORMAL)
                     cv2.imshow(f, img2)
                     cv2.waitKey(50)
-                
-                flag_inout = False
+                flag_sitting = False
                 start_out = now - t_lim
             
             cv2.namedWindow(f, cv2.WINDOW_NORMAL)
