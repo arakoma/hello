@@ -24,6 +24,8 @@ def main():
     while True:
         # 設定画面
         img_path = my_func.configuration()
+        if not os.path.exists(img_path):
+            return
 
         # カメラ位置調整
         my_func.adjust_camera(face_cascade)
@@ -119,7 +121,9 @@ def main():
             if key:
                 #終了
                 if key == ord('q'):
-                    sys.exit()
+                    cap.release()
+                    cv2.destroyAllWindows()
+                    return
                 #flagリセット
                 elif key == ord('r'):
                     flag_hello = True
