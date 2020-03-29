@@ -18,8 +18,8 @@ def resource_path(relative_path):
 
 
 def main():
-#    face_cascade = cv2.CascadeClassifier(resource_path('haarcascade_frontalface_default.xml'))
-    face_cascade = cv2.CascadeClassifier('./haarcascades/haarcascade_frontalface_default.xml')
+    face_cascade = cv2.CascadeClassifier(resource_path('haarcascade_frontalface_default.xml'))#exe化するときこっち
+#    face_cascade = cv2.CascadeClassifier('./haarcascades/haarcascade_frontalface_default.xml')
 
     while True:
         # 設定画面
@@ -39,7 +39,7 @@ def main():
             img_out = None
         else:
             img_in = cv2.imread(img_path)
-            img_out = my_func.mosaic(img_in, s=1)
+            img_out = np.zeros(img_in.shape, np.uint8)
 
         #音声flag
         flag_hello = True
@@ -95,8 +95,8 @@ def main():
 
                 # flag で音声出力
                 if flag_hello:
-#                    my_func.play_sound(resource_path("ohhayoo_01.wav"), "wav")
-                    my_func.play_sound("./sounds/ohhayoo_01.wav", "wav")
+                    my_func.play_sound(resource_path("ohhayoo_01.wav"), "wav")#exe化するときこっち
+#                    my_func.play_sound("./sounds/ohhayoo_01.wav", "wav")
 
                     flag_hello = False
 
