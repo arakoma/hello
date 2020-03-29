@@ -18,21 +18,28 @@ def resource_path(relative_path):
 
 
 def main():
-    face_cascade = cv2.CascadeClassifier(resource_path('haarcascade_frontalface_default.xml'))
-#    face_cascade = cv2.CascadeClassifier('./haarcascades/haarcascade_frontalface_default.xml')
+#    face_cascade = cv2.CascadeClassifier(resource_path('haarcascade_frontalface_default.xml'))
+    face_cascade = cv2.CascadeClassifier('./haarcascades/haarcascade_frontalface_default.xml')
 
     while True:
         # 設定画面
         img_path = my_func.configuration()
-        if not os.path.exists(img_path):
+        camera_mode = False
+        if img_path == "camera":
+            camera_mode = True
+        elif not os.path.exists(img_path):
             return
 
         # カメラ位置調整
         my_func.adjust_camera(face_cascade)
 
         #表示画像
-        img_in = cv2.imread(img_path)
-        img_out = my_func.mosaic(img_in, s=1)
+        if camera_mode:
+            img_in = None
+            img_out = None
+        else:
+            img_in = cv2.imread(img_path)
+            img_out = my_func.mosaic(img_in, s=1)
 
         #音声flag
         flag_hello = True
@@ -58,9 +65,14 @@ def main():
 
             #顔検出
             faces = face_cascade.detectMultiScale(gray, minSize=(200, 200))
-    #        for (x,y,w,h) in faces:
-    #            frame = cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
-            
+
+            if camera_mode:
+                for (x,y,w,h) in faces:
+                    frame = cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
+                img_in = frame
+                if img_out is None:
+                    img_out = np.zeros(frame.shape, np.uint8)
+
             t_lim = 3
             now = time.time()
             t_in = now - start_in
@@ -83,8 +95,8 @@ def main():
 
                 # flag で音声出力
                 if flag_hello:
-                    my_func.play_sound(resource_path("ohhayoo_01.wav"), "wav")
-#                    my_func.play_sound("./sounds/ohhayoo_01.wav", "wav")
+#                    my_func.play_sound(resource_path("ohhayoo_01.wav"), "wav")
+                    my_func.play_sound("./sounds/ohhayoo_01.wav", "wav")
 
                     flag_hello = False
 

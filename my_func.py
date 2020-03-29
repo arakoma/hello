@@ -22,7 +22,10 @@ import numpy as np
 def is_exist(path, frame, r, name):
     path = str(path.get())
     rpath = str(repr(path)[1:-1])#raw文字列化
-    if os.path.exists(rpath):
+    if rpath == "camera":
+        camera = ttk.Label(frame, width=50, text="camera mode")
+        camera.grid(row=r)
+    elif os.path.exists(rpath):
         ok = ttk.Label(frame, width=50, text="{} ok !".format(name))
         ok.grid(row=r)
     else:
